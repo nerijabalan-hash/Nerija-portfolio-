@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice Overview — Nerija Balan</title>
+  <meta name="description" content="Case study: Invoice Overview — streamlining billing management for Onomondo's SIM platform.">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── Case Study Specific Styles (shared with network-marketplace) ── */
+
+    .cs-hero {
+      padding-top: calc(var(--nav-height) + var(--s10));
+      padding-bottom: var(--s10);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .cs-hero__eyebrow {
+      display: flex;
+      align-items: center;
+      gap: var(--s3);
+      margin-bottom: var(--s6);
+    }
+
+    .cs-hero__back {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      transition: color 150ms var(--ease-out);
+      display: flex;
+      align-items: center;
+      gap: var(--s2);
+    }
+    .cs-hero__back:hover { color: var(--color-text-1); }
+
+    .cs-hero__sep { color: var(--color-border); font-size: var(--text-xs); }
+
+    .cs-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--s5);
+    }
+
+    .cs-hero__subtitle {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--color-text-2);
+      letter-spacing: -0.01em;
+      max-width: 640px;
+      line-height: var(--leading-relaxed);
+    }
+
+    .cs-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--s5);
+      padding: var(--s7) 0;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: var(--s10);
+    }
+
+    .cs-meta__label {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      margin-bottom: var(--s2);
+    }
+
+    .cs-meta__value {
+      font-size: var(--text-sm);
+      color: var(--color-text-1);
+      line-height: var(--leading-normal);
+    }
+
+    .cs-cover {
+      width: 100%;
+      aspect-ratio: 16/7;
+      background: var(--color-surface);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: var(--s10);
+    }
+
+    .cs-cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #D9CDBA 0%, #BFA882 100%);
+      opacity: 0.7;
+    }
+
+    .cs-cover__label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(24,23,26,0.4);
+    }
+
+    .cs-body {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 0 var(--s10);
+      margin-bottom: var(--s10);
+    }
+
+    .cs-sidebar {
+      position: sticky;
+      top: calc(var(--nav-height) + var(--s5));
+      align-self: start;
+    }
+
+    .cs-toc { list-style: none; display: flex; flex-direction: column; gap: var(--s3); }
+
+    .cs-toc__item a {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      transition: color 150ms var(--ease-out);
+      display: flex;
+      align-items: center;
+      gap: var(--s2);
+    }
+
+    .cs-toc__item a::before {
+      content: '';
+      width: 16px;
+      height: 1px;
+      background: var(--color-border);
+      transition: width 150ms var(--ease-out), background 150ms;
+    }
+
+    .cs-toc__item a:hover { color: var(--color-text-1); }
+    .cs-toc__item a:hover::before { width: 24px; background: var(--color-text-1); }
+
+    .cs-section {
+      padding-bottom: var(--s9);
+      margin-bottom: var(--s9);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .cs-section:last-child { border-bottom: none; }
+
+    .cs-section__label {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      margin-bottom: var(--s5);
+    }
+
+    .cs-section__heading {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 300;
+      font-style: italic;
+      line-height: var(--leading-tight);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--s6);
+    }
+
+    .cs-section__body {
+      font-size: var(--text-base);
+      color: var(--color-text-2);
+      line-height: var(--leading-relaxed);
+      max-width: 640px;
+    }
+    .cs-section__body p + p { margin-top: var(--s4); }
+
+    .cs-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--color-surface);
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      margin: var(--s7) 0;
+    }
+
+    .cs-image--2 { aspect-ratio: 4/3; }
+
+    .cs-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #D9CDBA 0%, #BFA882 100%);
+      opacity: 0.5;
+    }
+
+    .cs-image__label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(24,23,26,0.4);
+    }
+
+    .cs-image__caption {
+      font-size: var(--text-xs);
+      color: var(--color-text-3);
+      letter-spacing: 0.02em;
+      margin-top: var(--s3);
+    }
+
+    .cs-quote {
+      padding: var(--s6) 0;
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      margin: var(--s7) 0;
+    }
+
+    .cs-quote__text {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 300;
+      font-style: italic;
+      line-height: var(--leading-relaxed);
+      letter-spacing: -0.01em;
+      color: var(--color-text-1);
+      margin-bottom: var(--s3);
+    }
+
+    .cs-quote__source {
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+    }
+
+    .cs-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--s4);
+      margin-top: var(--s5);
+    }
+
+    .cs-list li {
+      font-size: var(--text-sm);
+      color: var(--color-text-2);
+      line-height: var(--leading-relaxed);
+      padding-left: var(--s5);
+      position: relative;
+    }
+
+    .cs-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--color-text-3);
+    }
+
+    .cs-decisions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s4);
+      margin-top: var(--s6);
+    }
+
+    .cs-decision {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--s5);
+    }
+
+    .cs-decision__number {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      margin-bottom: var(--s3);
+    }
+
+    .cs-decision__title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--s2);
+    }
+
+    .cs-decision__desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-2);
+      line-height: var(--leading-relaxed);
+    }
+
+    /* Journey steps */
+    .cs-journey {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: var(--s6);
+      counter-reset: journey;
+    }
+
+    .cs-journey__step {
+      display: flex;
+      gap: var(--s5);
+      padding: var(--s4) 0;
+      border-top: 1px solid var(--color-border);
+      align-items: baseline;
+      counter-increment: journey;
+    }
+
+    .cs-journey__step::before {
+      content: counter(journey, decimal-leading-zero);
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-style: italic;
+      color: var(--color-text-3);
+      flex-shrink: 0;
+      width: 28px;
+    }
+
+    .cs-journey__text {
+      font-size: var(--text-sm);
+      color: var(--color-text-2);
+      line-height: var(--leading-relaxed);
+    }
+
+    /* Status indicators */
+    .cs-statuses {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s4);
+      margin-top: var(--s5);
+    }
+
+    .cs-status {
+      padding: var(--s4);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+    }
+
+    .cs-status__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-bottom: var(--s3);
+    }
+
+    .cs-status--paid .cs-status__dot   { background: #4A9B6F; }
+    .cs-status--due .cs-status__dot    { background: #A38B3F; }
+    .cs-status--overdue .cs-status__dot{ background: #B85A4A; }
+
+    .cs-status__label {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-1);
+      margin-bottom: var(--s2);
+    }
+
+    .cs-status__desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-2);
+      line-height: var(--leading-relaxed);
+    }
+
+    .cs-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s4);
+      margin-top: var(--s6);
+    }
+
+    .cs-stat {
+      padding: var(--s5) 0;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .cs-stat__value {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: var(--s2);
+    }
+
+    .cs-stat__label {
+      font-size: var(--text-sm);
+      color: var(--color-text-2);
+      line-height: var(--leading-normal);
+    }
+
+    .cs-next {
+      padding: var(--s9) 0;
+      border-top: 1px solid var(--color-border);
+      margin-top: var(--s10);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s4);
+    }
+
+    .cs-next__label {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      margin-bottom: var(--s2);
+    }
+
+    .cs-next__title {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: -0.02em;
+      color: var(--color-text-1);
+      transition: color 150ms var(--ease-out);
+    }
+    .cs-next__title:hover { color: var(--color-accent); }
+
+    @media (max-width: 1024px) {
+      .cs-body { grid-template-columns: 1fr; }
+      .cs-sidebar { display: none; }
+      .cs-meta { grid-template-columns: repeat(2, 1fr); }
+      .cs-decisions { grid-template-columns: 1fr; }
+      .cs-statuses { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .cs-meta { grid-template-columns: 1fr 1fr; }
+      .cs-stats { grid-template-columns: 1fr; }
+      .cs-next { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================================
+       NAVIGATION
+       ====================================================== -->
+  <header class="nav" role="banner">
+    <div class="container">
+      <div class="nav__inner">
+        <a href="index.html" class="nav__logo" aria-label="Nerija Balan — home">Nerija</a>
+        <nav aria-label="Primary">
+          <ul class="nav__links">
+            <li><a href="work.html" class="active">Work</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ======================================================
+         HERO
+         ====================================================== -->
+    <div class="container">
+      <div class="cs-hero">
+        <div class="cs-hero__eyebrow">
+          <a href="work.html" class="cs-hero__back">← Work</a>
+          <span class="cs-hero__sep">/</span>
+          <span class="label">FinTech · UX Design</span>
+        </div>
+        <h1 class="cs-hero__title">Invoice<br>Overview</h1>
+        <p class="cs-hero__subtitle">
+          Replacing manual billing management with a self-serve
+          invoice experience inside Onomondo's SIM platform.
+        </p>
+      </div>
+    </div>
+
+    <!-- ======================================================
+         META
+         ====================================================== -->
+    <div class="container">
+      <div class="cs-meta">
+        <div class="cs-meta__item">
+          <p class="cs-meta__label">Role</p>
+          <p class="cs-meta__value">Senior UX Designer</p>
+        </div>
+        <div class="cs-meta__item">
+          <p class="cs-meta__label">Company</p>
+          <p class="cs-meta__value">Onomondo</p>
+        </div>
+        <div class="cs-meta__item">
+          <p class="cs-meta__label">Year</p>
+          <p class="cs-meta__value">2022–2024</p>
+        </div>
+        <div class="cs-meta__item">
+          <p class="cs-meta__label">Methods</p>
+          <p class="cs-meta__value">Customer Interviews, Hotjar Survey, Workshop</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================
+         COVER
+         ====================================================== -->
+    <div class="container">
+      <div class="cs-cover" role="img" aria-label="Invoice Overview project cover">
+        <div class="cs-cover__label">project-cover.jpg</div>
+      </div>
+    </div>
+
+    <!-- ======================================================
+         BODY
+         ====================================================== -->
+    <div class="container">
+      <div class="cs-body">
+
+        <!-- Sidebar TOC -->
+        <aside class="cs-sidebar" aria-label="Table of contents">
+          <ul class="cs-toc">
+            <li class="cs-toc__item"><a href="#context">Context</a></li>
+            <li class="cs-toc__item"><a href="#problem">Problem</a></li>
+            <li class="cs-toc__item"><a href="#research">Research</a></li>
+            <li class="cs-toc__item"><a href="#process">Process</a></li>
+            <li class="cs-toc__item"><a href="#decisions">Key Decisions</a></li>
+            <li class="cs-toc__item"><a href="#journey">User Journey</a></li>
+            <li class="cs-toc__item"><a href="#outcome">Outcome</a></li>
+          </ul>
+        </aside>
+
+        <!-- Main content -->
+        <div class="cs-content">
+
+          <!-- CONTEXT -->
+          <section class="cs-section" id="context">
+            <p class="cs-section__label">Context</p>
+            <h2 class="cs-section__heading">About the product</h2>
+            <div class="cs-section__body">
+              <p>
+                Onomondo provides infrastructure allowing data transfer from devices
+                on networks to customer storage solutions. The company sells SIM cards
+                enabling physical devices — bicycles, shipping containers, cars — to
+                connect to mobile networks for data transfer.
+              </p>
+              <p>
+                Despite the sophistication of the platform, billing remained entirely
+                outside of it. Customers had no way to view or manage invoices
+                themselves, creating a dependency on internal teams for every
+                payment-related query.
+              </p>
+            </div>
+          </section>
+
+          <!-- PROBLEM -->
+          <section class="cs-section" id="problem">
+            <p class="cs-section__label">Problem</p>
+            <h2 class="cs-section__heading">A gap at the heart of the platform</h2>
+            <div class="cs-section__body">
+              <p>
+                The SIM management portal lacked a dedicated section for handling
+                payments related to Onomondo products and SIM card shipments. This
+                created two compounding problems: customers couldn't self-serve, and
+                internal teams carried the full burden of manual payment management.
+              </p>
+            </div>
+
+            <ul class="cs-list">
+              <li><strong>No centralised payment method</strong> — customers had no way to view, manage, or pay invoices inside the platform.</li>
+              <li><strong>Resource-intensive manual processes</strong> — Customer Success and Finance teams handled all payment queries by hand, creating significant overhead.</li>
+              <li><strong>No visibility for customers</strong> — users couldn't access billing history, understand charges, or download invoices without contacting Onomondo directly.</li>
+            </ul>
+
+            <div class="cs-image" role="img" aria-label="Current state workflow showing manual billing process">
+              <div class="cs-image__label">project-1.jpg — Current state workflow</div>
+            </div>
+            <p class="cs-image__caption">Current state: billing managed entirely outside the platform by Customer Success</p>
+          </section>
+
+          <!-- RESEARCH -->
+          <section class="cs-section" id="research">
+            <p class="cs-section__label">Research</p>
+            <h2 class="cs-section__heading">Understanding the need</h2>
+            <div class="cs-section__body">
+              <p>
+                Research drew from three sources: customer requests documented in
+                ProductBoard, a cross-functional workshop with Customer Success and
+                Finance teams, and a Hotjar survey distributed to platform users.
+              </p>
+            </div>
+
+            <blockquote class="cs-quote">
+              <p class="cs-quote__text">
+                "Users needed subscription management and visibility of due payments —
+                consolidated monthly reports with invoices, and portal-based access
+                to all billing data."
+              </p>
+              <cite class="cs-quote__source">Recurring theme across ProductBoard customer requests</cite>
+            </blockquote>
+
+            <div class="cs-section__body">
+              <p><strong>Workshop findings</strong> — collaborating with Customer Success and Finance revealed what the system needed to support internally:</p>
+            </div>
+            <ul class="cs-list">
+              <li>HubSpot and Stripe integration to connect billing with existing infrastructure</li>
+              <li>Clear identification of account owners responsible for invoices</li>
+              <li>Notification system for due dates and overdue invoices</li>
+              <li>Detailed invoice transparency for customers and internal teams</li>
+              <li>Ability for users to review and edit their invoicing information</li>
+            </ul>
+
+            <div class="cs-section__body" style="margin-top: var(--s7);">
+              <p><strong>Hotjar survey</strong> — 5 questions, 18 responses. Users were shown early design mockups and asked what they needed.</p>
+            </div>
+            <ul class="cs-list">
+              <li>Users appreciated expandable invoice rows for detailed information</li>
+              <li>Requested clarity on carrier fees and access fees as separate line items</li>
+              <li>Wanted data consumption breakdowns per network</li>
+              <li>Desired colour-coded invoice status indicators for quick scanning</li>
+              <li>Requested date-based filtering to find invoices quickly</li>
+            </ul>
+          </section>
+
+          <!-- PROCESS -->
+          <section class="cs-section" id="process">
+            <p class="cs-section__label">Process</p>
+            <h2 class="cs-section__heading">From insights to interface</h2>
+            <div class="cs-section__body">
+              <p>
+                The design process started by defining scope — separating must-have
+                features from nice-to-haves — then moved into mockups that were
+                validated through the Hotjar survey before refinement.
+              </p>
+            </div>
+
+            <div class="cs-section__body" style="margin-top: var(--s5);">
+              <p><strong>Must-have features:</strong></p>
+            </div>
+            <ul class="cs-list">
+              <li>Invoice overview with clear status visibility across all invoices</li>
+              <li>Direct payment capability through the platform</li>
+            </ul>
+
+            <div class="cs-section__body" style="margin-top: var(--s5);">
+              <p><strong>Nice-to-have features:</strong></p>
+            </div>
+            <ul class="cs-list">
+              <li>Ability to edit billing information directly in the platform</li>
+            </ul>
+
+            <div class="cs-image cs-image--2" role="img" aria-label="Initial design mockups and explorations">
+              <div class="cs-image__label">project-2.jpg — Design explorations</div>
+            </div>
+            <p class="cs-image__caption">Initial design mockups explored invoice layout, status indicators, and expandable rows</p>
+          </section>
+
+          <!-- KEY DECISIONS -->
+          <section class="cs-section" id="decisions">
+            <p class="cs-section__label">Key Design Decisions</p>
+            <h2 class="cs-section__heading">What we built and why</h2>
+
+            <div class="cs-decisions">
+
+              <div class="cs-decision">
+                <p class="cs-decision__number">01</p>
+                <h3 class="cs-decision__title">Two invoice types</h3>
+                <p class="cs-decision__desc">
+                  Invoices are split into <em>Software Plan</em> (monthly billing) and
+                  <em>SIM Order</em> (one-time charges). Each type shares core fields —
+                  billing period, deadline, total, status, PDF download — adapted to
+                  the nature of the charge.
+                </p>
+              </div>
+
+              <div class="cs-decision">
+                <p class="cs-decision__number">02</p>
+                <h3 class="cs-decision__title">Colour-coded status system</h3>
+                <p class="cs-decision__desc">
+                  Status indicators allow users to scan invoice health at a glance
+                  without reading individual rows. Colour paired with label ensures
+                  the system is accessible without relying on colour alone.
+                </p>
+              </div>
+
+              <div class="cs-decision">
+                <p class="cs-decision__number">03</p>
+                <h3 class="cs-decision__title">Owner-only access</h3>
+                <p class="cs-decision__desc">
+                  Invoice Overview is exclusively available to platform owners,
+                  ensuring privileged billing information is accessed only by
+                  the right people within a customer organisation.
+                </p>
+              </div>
+
+              <div class="cs-decision">
+                <p class="cs-decision__number">04</p>
+                <h3 class="cs-decision__title">In-platform notifications</h3>
+                <p class="cs-decision__desc">
+                  Owners receive toast notifications on login for outstanding and
+                  overdue invoices. A minimum 10-day recheck interval prevents
+                  alert fatigue. Messages dismiss on close or timeout.
+                </p>
+              </div>
+
+              <div class="cs-decision">
+                <p class="cs-decision__number">05</p>
+                <h3 class="cs-decision__title">Integrated payment flow</h3>
+                <p class="cs-decision__desc">
+                  Users can select their preferred payment method and complete
+                  payment directly within the platform — eliminating the need
+                  to contact Customer Success for any invoice-related action.
+                </p>
+              </div>
+
+              <div class="cs-decision">
+                <p class="cs-decision__number">06</p>
+                <h3 class="cs-decision__title">PDF download</h3>
+                <p class="cs-decision__desc">
+                  Every invoice is downloadable as a PDF for access, saving,
+                  and printing — a baseline requirement for enterprise finance
+                  teams managing their own records.
+                </p>
+              </div>
+
+            </div>
+
+            <div style="margin-top: var(--s7);">
+              <p class="cs-section__label" style="margin-bottom: var(--s4);">Status Indicators</p>
+              <div class="cs-statuses">
+                <div class="cs-status cs-status--paid">
+                  <div class="cs-status__dot"></div>
+                  <p class="cs-status__label">Paid</p>
+                  <p class="cs-status__desc">Invoice settled. No action required.</p>
+                </div>
+                <div class="cs-status cs-status--due">
+                  <div class="cs-status__dot"></div>
+                  <p class="cs-status__label">Outstanding</p>
+                  <p class="cs-status__desc">Payment due. Action available in platform.</p>
+                </div>
+                <div class="cs-status cs-status--overdue">
+                  <div class="cs-status__dot"></div>
+                  <p class="cs-status__label">Overdue</p>
+                  <p class="cs-status__desc">Past due date. Notification triggered on login.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- USER JOURNEY -->
+          <section class="cs-section" id="journey">
+            <p class="cs-section__label">User Journey</p>
+            <h2 class="cs-section__heading">The expected flow</h2>
+            <div class="cs-section__body">
+              <p>
+                The redesigned journey gives platform owners full control over
+                billing without leaving the product — from discovery to payment
+                to documentation.
+              </p>
+            </div>
+            <div class="cs-journey" aria-label="User journey steps">
+              <div class="cs-journey__step">
+                <span class="cs-journey__text">Navigate to Invoice Overview section after login</span>
+              </div>
+              <div class="cs-journey__step">
+                <span class="cs-journey__text">View invoice summary with categorised Software Plan and SIM Order invoices</span>
+              </div>
+              <div class="cs-journey__step">
+                <span class="cs-journey__text">Expand individual invoices for detailed breakdown — charges, fees, taxes, discounts</span>
+              </div>
+              <div class="cs-journey__step">
+                <span class="cs-journey__text">Make payments for due or overdue invoices directly within the platform</span>
+              </div>
+              <div class="cs-journey__step">
+                <span class="cs-journey__text">Receive notifications regarding outstanding or overdue invoices on next login</span>
+              </div>
+              <div class="cs-journey__step">
+                <span class="cs-journey__text">Download invoices as PDFs for internal finance records</span>
+              </div>
+              <div class="cs-journey__step">
+                <span class="cs-journey__text">Navigate away or return to the main dashboard</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- OUTCOME -->
+          <section class="cs-section" id="outcome">
+            <p class="cs-section__label">Outcome</p>
+            <h2 class="cs-section__heading">Impact</h2>
+            <div class="cs-section__body">
+              <p>
+                Bringing invoicing into the platform transformed billing from a
+                manual internal process into a self-serve experience — reducing
+                overhead for Onomondo's teams while giving customers the
+                transparency and control they had been requesting.
+              </p>
+            </div>
+            <div class="cs-stats">
+              <div class="cs-stat">
+                <p class="cs-stat__value">Self-serve</p>
+                <p class="cs-stat__label">
+                  Customers can now view, pay, and download invoices entirely
+                  within the platform — no Customer Success involvement required.
+                </p>
+              </div>
+              <div class="cs-stat">
+                <p class="cs-stat__value">↓ Manual work</p>
+                <p class="cs-stat__label">
+                  Eliminated resource-intensive manual payment management
+                  previously handled by Customer Success and Finance teams.
+                </p>
+              </div>
+            </div>
+          </section>
+
+        </div>
+        <!-- /cs-content -->
+
+      </div>
+      <!-- /cs-body -->
+    </div>
+
+    <!-- ======================================================
+         NEXT PROJECT
+         ====================================================== -->
+    <div class="container">
+      <div class="cs-next">
+        <div>
+          <p class="cs-next__label">Next Project</p>
+          <a href="work.html" class="cs-next__title">All Projects →</a>
+        </div>
+        <a href="network-marketplace.html" class="btn btn--outline">← Network Marketplace</a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ======================================================
+       FOOTER
+       ====================================================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <p class="footer__copy">© 2025 Nerija Balan</p>
+        <ul class="footer__links">
+          <li><a href="mailto:nerija.balan@gmail.com">Email</a></li>
+          <li><a href="https://linkedin.com/in/nerija-balan-41176445" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

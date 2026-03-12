@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Marketplace — Nerija Balan</title>
+  <meta name="description" content="Case study: Network Marketplace — custom coverage maps for IoT network management at Onomondo.">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── Case Study Specific Styles ── */
+
+    .cs-hero {
+      padding-top: calc(var(--nav-height) + var(--s10));
+      padding-bottom: var(--s10);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .cs-hero__eyebrow {
+      display: flex;
+      align-items: center;
+      gap: var(--s3);
+      margin-bottom: var(--s6);
+    }
+
+    .cs-hero__back {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      transition: color 150ms var(--ease-out);
+      display: flex;
+      align-items: center;
+      gap: var(--s2);
+    }
+    .cs-hero__back:hover { color: var(--color-text-1); }
+
+    .cs-hero__sep {
+      color: var(--color-border);
+      font-size: var(--text-xs);
+    }
+
+    .cs-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--s5);
+    }
+
+    .cs-hero__subtitle {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--color-text-2);
+      letter-spacing: -0.01em;
+      max-width: 640px;
+      line-height: var(--leading-relaxed);
+    }
+
+    .cs-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--s5);
+      padding: var(--s7) 0;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: var(--s10);
+    }
+
+    .cs-meta__item {}
+
+    .cs-meta__label {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      margin-bottom: var(--s2);
+    }
+
+    .cs-meta__value {
+      font-size: var(--text-sm);
+      color: var(--color-text-1);
+      line-height: var(--leading-normal);
+    }
+
+    /* Cover image */
+    .cs-cover {
+      width: 100%;
+      aspect-ratio: 16/7;
+      background: var(--color-surface);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: var(--s10);
+    }
+
+    .cs-cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #C2CEDB 0%, #8DAABF 100%);
+      opacity: 0.7;
+    }
+
+    .cs-cover__label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(24,23,26,0.4);
+    }
+
+    /* Body layout */
+    .cs-body {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 0 var(--s10);
+      margin-bottom: var(--s10);
+    }
+
+    .cs-sidebar {
+      position: sticky;
+      top: calc(var(--nav-height) + var(--s5));
+      align-self: start;
+    }
+
+    .cs-toc {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--s3);
+    }
+
+    .cs-toc__item a {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      transition: color 150ms var(--ease-out);
+      display: flex;
+      align-items: center;
+      gap: var(--s2);
+    }
+
+    .cs-toc__item a::before {
+      content: '';
+      width: 16px;
+      height: 1px;
+      background: var(--color-border);
+      transition: width 150ms var(--ease-out), background 150ms;
+    }
+
+    .cs-toc__item a:hover { color: var(--color-text-1); }
+    .cs-toc__item a:hover::before {
+      width: 24px;
+      background: var(--color-text-1);
+    }
+
+    /* Content sections */
+    .cs-content {}
+
+    .cs-section {
+      padding-bottom: var(--s9);
+      margin-bottom: var(--s9);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .cs-section:last-child {
+      border-bottom: none;
+    }
+
+    .cs-section__label {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      margin-bottom: var(--s5);
+    }
+
+    .cs-section__heading {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 300;
+      font-style: italic;
+      line-height: var(--leading-tight);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--s6);
+    }
+
+    .cs-section__body {
+      font-size: var(--text-base);
+      color: var(--color-text-2);
+      line-height: var(--leading-relaxed);
+      max-width: 640px;
+    }
+
+    .cs-section__body p + p {
+      margin-top: var(--s4);
+    }
+
+    /* Inline image placeholder */
+    .cs-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--color-surface);
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      margin: var(--s7) 0;
+    }
+
+    .cs-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #C2CEDB 0%, #8DAABF 100%);
+      opacity: 0.5;
+    }
+
+    .cs-image__label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(24,23,26,0.4);
+    }
+
+    .cs-image__caption {
+      font-size: var(--text-xs);
+      color: var(--color-text-3);
+      letter-spacing: 0.02em;
+      margin-top: var(--s3);
+    }
+
+    /* Quote / pull quote */
+    .cs-quote {
+      padding: var(--s6) 0;
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      margin: var(--s7) 0;
+    }
+
+    .cs-quote__text {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 300;
+      font-style: italic;
+      line-height: var(--leading-relaxed);
+      letter-spacing: -0.01em;
+      color: var(--color-text-1);
+      margin-bottom: var(--s3);
+    }
+
+    .cs-quote__source {
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+    }
+
+    /* Finding list */
+    .cs-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--s4);
+      margin-top: var(--s5);
+    }
+
+    .cs-list li {
+      font-size: var(--text-sm);
+      color: var(--color-text-2);
+      line-height: var(--leading-relaxed);
+      padding-left: var(--s5);
+      position: relative;
+    }
+
+    .cs-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--color-text-3);
+    }
+
+    /* Decision cards */
+    .cs-decisions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s4);
+      margin-top: var(--s6);
+    }
+
+    .cs-decision {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--s5);
+    }
+
+    .cs-decision__number {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      margin-bottom: var(--s3);
+    }
+
+    .cs-decision__title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--s2);
+    }
+
+    .cs-decision__desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-2);
+      line-height: var(--leading-relaxed);
+    }
+
+    /* Stats / outcomes */
+    .cs-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s4);
+      margin-top: var(--s6);
+    }
+
+    .cs-stat {
+      padding: var(--s5) 0;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .cs-stat__value {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: var(--s2);
+    }
+
+    .cs-stat__label {
+      font-size: var(--text-sm);
+      color: var(--color-text-2);
+      line-height: var(--leading-normal);
+    }
+
+    /* Next project */
+    .cs-next {
+      padding: var(--s9) 0;
+      border-top: 1px solid var(--color-border);
+      margin-top: var(--s10);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s4);
+    }
+
+    .cs-next__label {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-3);
+      margin-bottom: var(--s2);
+    }
+
+    .cs-next__title {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: -0.02em;
+      color: var(--color-text-1);
+      transition: color 150ms var(--ease-out);
+    }
+
+    .cs-next__title:hover { color: var(--color-accent); }
+
+    @media (max-width: 1024px) {
+      .cs-body { grid-template-columns: 1fr; }
+      .cs-sidebar { display: none; }
+      .cs-meta { grid-template-columns: repeat(2, 1fr); }
+      .cs-decisions { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .cs-meta { grid-template-columns: 1fr 1fr; }
+      .cs-stats { grid-template-columns: 1fr; }
+      .cs-next { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================================
+       NAVIGATION
+       ====================================================== -->
+  <header class="nav" role="banner">
+    <div class="container">
+      <div class="nav__inner">
+        <a href="index.html" class="nav__logo" aria-label="Nerija Balan — home">Nerija</a>
+        <nav aria-label="Primary">
+          <ul class="nav__links">
+            <li><a href="work.html" class="active">Work</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ======================================================
+         HERO
+         ====================================================== -->
+    <div class="container">
+      <div class="cs-hero">
+        <div class="cs-hero__eyebrow">
+          <a href="work.html" class="cs-hero__back">← Work</a>
+          <span class="cs-hero__sep">/</span>
+          <span class="label">IoT · Product Design</span>
+        </div>
+        <h1 class="cs-hero__title">Network<br>Marketplace</h1>
+        <p class="cs-hero__subtitle">
+          Empowering enterprise users with custom coverage maps,
+          simplifying IoT network management at Onomondo.
+        </p>
+      </div>
+    </div>
+
+    <!-- ======================================================
+         META
+         ====================================================== -->
+    <div class="container">
+      <div class="cs-meta">
+        <div class="cs-meta__item">
+          <p class="cs-meta__label">Role</p>
+          <p class="cs-meta__value">Senior UX Designer</p>
+        </div>
+        <div class="cs-meta__item">
+          <p class="cs-meta__label">Company</p>
+          <p class="cs-meta__value">Onomondo</p>
+        </div>
+        <div class="cs-meta__item">
+          <p class="cs-meta__label">Year</p>
+          <p class="cs-meta__value">2022–2024</p>
+        </div>
+        <div class="cs-meta__item">
+          <p class="cs-meta__label">Methods</p>
+          <p class="cs-meta__value">User Interviews, Surveys, Think-aloud Testing</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================
+         COVER IMAGE
+         ====================================================== -->
+    <div class="container">
+      <div class="cs-cover" role="img" aria-label="Network Marketplace project cover">
+        <div class="cs-cover__label">project-cover.jpg</div>
+      </div>
+    </div>
+
+    <!-- ======================================================
+         BODY — TOC + CONTENT
+         ====================================================== -->
+    <div class="container">
+      <div class="cs-body">
+
+        <!-- Sidebar TOC -->
+        <aside class="cs-sidebar" aria-label="Table of contents">
+          <ul class="cs-toc">
+            <li class="cs-toc__item"><a href="#context">Context</a></li>
+            <li class="cs-toc__item"><a href="#problem">Problem</a></li>
+            <li class="cs-toc__item"><a href="#research">Research</a></li>
+            <li class="cs-toc__item"><a href="#process">Process</a></li>
+            <li class="cs-toc__item"><a href="#decisions">Key Decisions</a></li>
+            <li class="cs-toc__item"><a href="#outcome">Outcome</a></li>
+          </ul>
+        </aside>
+
+        <!-- Main content -->
+        <div class="cs-content">
+
+          <!-- CONTEXT -->
+          <section class="cs-section" id="context">
+            <p class="cs-section__label">Context</p>
+            <h2 class="cs-section__heading">About the product</h2>
+            <div class="cs-section__body">
+              <p>
+                Onomondo is a SIM supplier that facilitates data transfer from
+                physical devices to the digital domain. The Network Marketplace
+                enables creation of custom coverage maps suited to business needs.
+              </p>
+              <p>
+                Users can create lists of selected networks to associate with SIMs,
+                determining which networks devices are allowed to register on —
+                giving enterprise customers fine-grained control over connectivity
+                across millions of IoT devices worldwide.
+              </p>
+            </div>
+          </section>
+
+          <!-- PROBLEM -->
+          <section class="cs-section" id="problem">
+            <p class="cs-section__label">Problem</p>
+            <h2 class="cs-section__heading">What wasn't working</h2>
+            <div class="cs-section__body">
+              <p>
+                A heuristic evaluation revealed significant usability issues
+                across five key areas, creating friction for the enterprise
+                users who relied on this tool daily.
+              </p>
+            </div>
+
+            <div class="cs-image" role="img" aria-label="Heuristic evaluation findings">
+              <div class="cs-image__label">project-1.jpg — Heuristic evaluation</div>
+            </div>
+            <p class="cs-image__caption">Heuristic evaluation of the existing Network Marketplace interface</p>
+
+            <ul class="cs-list">
+              <li><strong>User control:</strong> Navigating the map to add countries was challenging. Users had to scroll through long lists, and frequent zooming in and out disrupted the experience — especially for smaller countries.</li>
+              <li><strong>Visibility of status:</strong> No clear overview of the total number of networks in a Network List, or how many networks were available per country.</li>
+              <li><strong>System and real world:</strong> Unclear visual communication around country selection, and an ambiguous "Submit" button with no clear purpose.</li>
+              <li><strong>Consistency:</strong> Pricing information was missing entirely, making it impossible to differentiate networks by cost.</li>
+              <li><strong>Recognition vs recall:</strong> Users had to remember country locations on a map and recall network quantities — with pricing only available by contacting the Customer Success team.</li>
+            </ul>
+          </section>
+
+          <!-- RESEARCH -->
+          <section class="cs-section" id="research">
+            <p class="cs-section__label">Research</p>
+            <h2 class="cs-section__heading">What users told us</h2>
+            <div class="cs-section__body">
+              <p>
+                Five user interviews and a survey with 44 respondents uncovered
+                a consistent theme: pricing transparency was the critical missing piece.
+              </p>
+            </div>
+
+            <blockquote class="cs-quote">
+              <p class="cs-quote__text">
+                "I'm trying to find out how much it costs to use the networks here.
+                I need the lowdown on the rates so I can make smart choices about
+                our data usage."
+              </p>
+              <cite class="cs-quote__source">CEO / Operations Manager, interview participant</cite>
+            </blockquote>
+
+            <div class="cs-section__body">
+              <p>
+                Survey results reinforced this clearly. The findings shaped our
+                design priorities from the ground up.
+              </p>
+            </div>
+
+            <ul class="cs-list">
+              <li><strong>84%</strong> emphasised the need for MB pricing transparency</li>
+              <li><strong>59%</strong> prioritised understanding additional access fees</li>
+              <li><strong>48%</strong> wanted technology information per network</li>
+              <li><strong>34%</strong> wanted clarity on KB data increment details</li>
+              <li><strong>32%</strong> sought clarity on geographical limitations</li>
+              <li><strong>Only 7%</strong> felt they had all the information they needed</li>
+            </ul>
+          </section>
+
+          <!-- PROCESS -->
+          <section class="cs-section" id="process">
+            <p class="cs-section__label">Process</p>
+            <h2 class="cs-section__heading">Design and testing</h2>
+            <div class="cs-section__body">
+              <p>
+                The design process began with separating the two primary user journeys —
+                creating a new Network List versus editing an existing one — which had
+                been conflated in the original interface.
+              </p>
+              <p>
+                Think-aloud usability testing with real users across four tasks
+                surfaced specific friction points and drove two rounds of iteration.
+              </p>
+            </div>
+
+            <div class="cs-image" role="img" aria-label="Design explorations and wireframes">
+              <div class="cs-image__label">project-2.jpg — Design explorations</div>
+            </div>
+            <p class="cs-image__caption">Early wireframes separating create and edit flows</p>
+
+            <div class="cs-section__body" style="margin-top: var(--s5);">
+              <p><strong>Testing tasks:</strong></p>
+            </div>
+            <ul class="cs-list">
+              <li>Create a Network List with Brazil, Serbia, and Denmark</li>
+              <li>Choose the cheapest networks in the selected countries</li>
+              <li>Name the new Network List and assign a tag</li>
+              <li>Rename a network and assign a tag</li>
+            </ul>
+
+            <div class="cs-section__body" style="margin-top: var(--s5);">
+              <p><strong>Initial findings led to:</strong></p>
+            </div>
+            <ul class="cs-list">
+              <li>Search function appearance was non-intuitive — users didn't recognise it as the primary navigation point</li>
+              <li>Tab navigation between "All Networks" and "Selected Networks" caused confusion about the current state</li>
+              <li>The interface needed clearer separation between adding, editing, and reviewing networks</li>
+            </ul>
+          </section>
+
+          <!-- KEY DECISIONS -->
+          <section class="cs-section" id="decisions">
+            <p class="cs-section__label">Key Design Decisions</p>
+            <h2 class="cs-section__heading">What we changed and why</h2>
+
+            <div class="cs-decisions">
+              <div class="cs-decision">
+                <p class="cs-decision__number">01</p>
+                <h3 class="cs-decision__title">Separated user journeys</h3>
+                <p class="cs-decision__desc">
+                  Split "Create New Network List" and "Edit Network List" into
+                  distinct flows, eliminating the confusion caused by a single
+                  combined interface.
+                </p>
+              </div>
+              <div class="cs-decision">
+                <p class="cs-decision__number">02</p>
+                <h3 class="cs-decision__title">Two-tab structure</h3>
+                <p class="cs-decision__desc">
+                  All Networks tab shows everything available; Selected Networks tab
+                  shows only chosen networks for review and editing. Tab label changes
+                  dynamically when filters are active.
+                </p>
+              </div>
+              <div class="cs-decision">
+                <p class="cs-decision__number">03</p>
+                <h3 class="cs-decision__title">Hierarchical organisation</h3>
+                <p class="cs-decision__desc">
+                  Regions as primary grouping, countries as expandable panels,
+                  networks displayed with rates and technologies on expansion —
+                  reducing recall load at every level.
+                </p>
+              </div>
+              <div class="cs-decision">
+                <p class="cs-decision__number">04</p>
+                <h3 class="cs-decision__title">Pricing transparency</h3>
+                <p class="cs-decision__desc">
+                  Network rates surfaced inline, removing the need to contact
+                  Customer Success for pricing information — the single most
+                  requested improvement from research.
+                </p>
+              </div>
+              <div class="cs-decision">
+                <p class="cs-decision__number">05</p>
+                <h3 class="cs-decision__title">Search as primary navigation</h3>
+                <p class="cs-decision__desc">
+                  A prominent search field replaces the map as the main entry
+                  point, with filters for country, region, network name, MNC, and MCC.
+                </p>
+              </div>
+              <div class="cs-decision">
+                <p class="cs-decision__number">06</p>
+                <h3 class="cs-decision__title">Map as overview, not input</h3>
+                <p class="cs-decision__desc">
+                  The map was repositioned as a coverage visualisation tool —
+                  showing selected countries at a glance — rather than the
+                  primary way to add networks.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- OUTCOME -->
+          <section class="cs-section" id="outcome">
+            <p class="cs-section__label">Outcome</p>
+            <h2 class="cs-section__heading">Results</h2>
+            <div class="cs-section__body">
+              <p>
+                Shipping the redesigned Network Marketplace with transparent pricing
+                and clearer navigation had a measurable impact on both user behaviour
+                and the support team's workload.
+              </p>
+            </div>
+
+            <div class="cs-stats">
+              <div class="cs-stat">
+                <p class="cs-stat__value">↓ Support</p>
+                <p class="cs-stat__label">
+                  Decreased support tickets about mobile network cost rates,
+                  as pricing is now visible inline.
+                </p>
+              </div>
+              <div class="cs-stat">
+                <p class="cs-stat__value">↑ Engagement</p>
+                <p class="cs-stat__label">
+                  More frequent visits to the Network Lists page, indicating
+                  the redesign aligned with how users actually work.
+                </p>
+              </div>
+            </div>
+          </section>
+
+        </div>
+        <!-- /cs-content -->
+
+      </div>
+      <!-- /cs-body -->
+    </div>
+
+    <!-- ======================================================
+         NEXT PROJECT
+         ====================================================== -->
+    <div class="container">
+      <div class="cs-next">
+        <div>
+          <p class="cs-next__label">Next Project</p>
+          <a href="invoice-overview.html" class="cs-next__title">Invoice Overview →</a>
+        </div>
+        <a href="work.html" class="btn btn--outline">All Projects</a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ======================================================
+       FOOTER
+       ====================================================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <p class="footer__copy">© 2025 Nerija Balan</p>
+        <ul class="footer__links">
+          <li><a href="mailto:nerija.balan@gmail.com">Email</a></li>
+          <li><a href="https://linkedin.com/in/nerija-balan-41176445" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

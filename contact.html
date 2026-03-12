@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Nerija Balan</title>
+  <meta name="description" content="Get in touch with Nerija Balan, UX Designer based in Copenhagen.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ======================================================
+       NAVIGATION
+       ====================================================== -->
+  <header class="nav" role="banner">
+    <div class="container">
+      <div class="nav__inner">
+        <a href="index.html" class="nav__logo" aria-label="Nerija Balan — home">Nerija</a>
+        <nav aria-label="Primary">
+          <ul class="nav__links">
+            <li><a href="work.html">Work</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ======================================================
+         PAGE HERO
+         ====================================================== -->
+    <div class="container">
+      <div class="page-hero">
+        <p class="label page-hero__eyebrow">Contact</p>
+        <h1 class="page-hero__title">Let's work<br>together.</h1>
+        <p class="page-hero__sub">
+          Open to new projects, collaborations, and conversations.
+          Based in Copenhagen — available for remote work worldwide.
+        </p>
+      </div>
+    </div>
+
+    <!-- ======================================================
+         CONTACT CONTENT
+         ====================================================== -->
+    <section class="section" style="padding-top: 0;" aria-label="Contact information and form">
+      <div class="container">
+        <div class="contact-layout">
+
+          <!-- Contact info -->
+          <div class="contact-info">
+
+            <div class="contact-links">
+
+              <div>
+                <span class="contact-link__label">Email</span>
+                <a href="mailto:nerija.balan@gmail.com" class="contact-link">
+                  <span class="contact-link__value">nerija.balan@gmail.com</span>
+                </a>
+              </div>
+
+              <div>
+                <span class="contact-link__label">Phone</span>
+                <a href="tel:+4542671072" class="contact-link">
+                  <span class="contact-link__value">+45 42 67 10 72</span>
+                </a>
+              </div>
+
+              <div>
+                <span class="contact-link__label">LinkedIn</span>
+                <a
+                  href="https://linkedin.com/in/nerija-balan-41176445"
+                  target="_blank"
+                  rel="noopener"
+                  class="contact-link"
+                >
+                  <span class="contact-link__value">nerija-balan-41176445</span>
+                </a>
+              </div>
+
+              <div>
+                <span class="contact-link__label">Location</span>
+                <span class="contact-link" style="cursor: default;">
+                  <span class="contact-link__value" style="color: var(--color-text-2);">Copenhagen, Denmark</span>
+                </span>
+              </div>
+
+            </div>
+
+            <div style="border-top: 1px solid var(--color-border); padding-top: var(--s5);">
+              <p class="label" style="margin-bottom: var(--s3);">Availability</p>
+              <p style="font-size: var(--text-sm); color: var(--color-text-2); line-height: var(--leading-relaxed);">
+                Currently available for new projects and full-time opportunities.
+                Typical response time within 48 hours.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Contact form -->
+          <form class="form contact-form" novalidate aria-label="Contact form">
+            <div class="form-field">
+              <label for="name" class="form-label">Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-input"
+                placeholder="Your full name"
+                required
+                autocomplete="name"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                placeholder="your@email.com"
+                required
+                autocomplete="email"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="subject" class="form-label">Subject</label>
+              <input
+                type="text"
+                id="subject"
+                name="subject"
+                class="form-input"
+                placeholder="Project type or topic"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="message" class="form-label">Message</label>
+              <textarea
+                id="message"
+                name="message"
+                class="form-textarea"
+                placeholder="Tell me about your project, timeline, and goals..."
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn--primary" style="align-self: flex-start; width: auto;">
+              Send Message
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================
+       FOOTER
+       ====================================================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <p class="footer__copy">© 2025 Nerija Balan</p>
+        <ul class="footer__links">
+          <li><a href="mailto:nerija.balan@gmail.com">Email</a></li>
+          <li><a href="https://linkedin.com/in/nerija-balan-41176445" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
